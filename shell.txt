@@ -1,0 +1,336 @@
+Why learn advanced bash scripting?
+==========================================================
+Interactive vs non-interactive-shell
+    interactive shell example:ls, cd,cat.
+    non-interactive shell example: script files or similar.
+    tty: teletypewriter: prints the file name of the terminal connected to standard input
+===========================================================
+Shell scripting vs Bash scripting:
+shebang:Tells the operating system which interpreter to use when running the script, and is the first line of the script.
+===========================================================
+Conventions: we can write shell script without space like declaring variable or any other.
+Variables:example name="Biken"
+functions: calculate_area() {
+
+}
+
+expanding variables: 
+#!/bin/bash
+
+var="this is biken"
+echo ${var}
+
+
+#!/bin/bash
+var="this is bikenagain"
+echo $var
+
+see below the difference of above two called variable
+#!/bin/bash
+height=170
+
+echo "the height is = $heightcm"
+echo "the height is = ${height}cm"
+==============================================================
+Refresher: this is just a topic to remind what we have learned in previous course
+scriptflow:
+conditional statement: if [[ 3 > 4 ]] ; then
+                            echo " this line will never be executed"
+                            fi
+case statemnt: case work in {
+    pattern1)
+    statement(s)
+    ;;
+
+    pattern 2)
+    statement(s)
+    ;;
+*)
+conditional statement to be executed;;
+
+esac
+}
+
+check it out while and for loop.
+
+we can call one script to other by using source example:
+
+#!/usr/bin/env bash
+source .conf
+echo "${name}"
+
+funcitons: 
+my_function(){
+    echo "this is my funciton and it will exit soon"
+}
+
+write some more functions code.
+
+=========================================================================
+write a shell script to clone a git repot to a specific directory
+write a shell script to clone a git repo using functions
+basename: this need to be searched
+=========================================================================
+Command Line Arguments:
+commmand line argument example of passing script and to count the files not to be hard coded.
+
+#!/bin/bash
+git clone "${1}"
+find . -type f | wc -l
+
+and the above is limited by the getcong ARG_MAX command.
+
+====================================================
+CLI: some task.
+
+#!/bin/bash
+project=${1}
+branch=${2}
+project_dir="$(basename ${project} .git)"
+
+clone_project() {
+  if [ ! -d "/home/bob/git/${project_dir}" ]; then
+  cd /home/bob/git/
+  git clone ${project}
+  git_checkout(){
+    cd "${project_dir}"
+    git checkout "${branch}"
+}
+fi
+}
+
+find_files() {
+  find "/home/bob/git/${project_dir}" -type f | wc -l
+}
+clone_project
+find_files
+git_checkout
+
+=============================================================
+pid:strace -Tfp pid
+strace -T: Timing information strace -f:Trace child process strace -p: parent shell pid
+
+=============================================================
+Built-in Commands:
+types of commands: built-in and programmes of binaries command
+to check if command is builtin or not we can use type followed by command example:
+type echo
+to check how much time it took to execute a command we can use time command:
+time true; time /usr/bin/true
+==============================================================
+keywords vs builtin commands:
+built-in commands []   and keywords [[ ]]
+compgen -k | wc -l: to check how many keywords we can use
+to check present shell that we are using: ps -p $$
+if [[ -e my-txt.txt ]]; 
+then
+  echo " file exists"
+else
+  echo " no file"
+fi
+
+guard clause: check and write some scripts
+guard clause is a techinc of writing code: which makes code readibility and not need to used more nested scope.
+write some shell scripts
+
+shebang:#!/bin/bash
+new or morden form of declaring shebang #!/usr/bin/ env bash
+cat /etc/shells
+
+if [[ -z "${var}" ]]; then
+   echo "Variable is empty"
+fi
+
+
+=================================================================
+streams:
+There are three types of streams associated: stdoutput:stdout,stderror:stderr,stdinput:stdin
+
+stdout & stderr: example of stdout is ls,echo,
+stderr:ls -j "this will give error as this j does not exist.
+ls -j 2> file.txt    "This will redirect the erro to file.txt"
+ls -l 1> file.txt  "This will redirect the output to file.txt"
+these are called as file descriptor.
+
+File descriptors:
+/dev/null:  2>&1   2>&1 > file.txt
+> /dev/null 2>&1; ls -z /dev/null 2>&1 
+
+
+Input:
+File descriptor: 
+  0;standard input: 
+  sud strace -Tfp $$ 2>&1 | grep -E 'read' &
+
+Converting File descriptors
+To Convert a file descriptor from one type to another, add to the syntax an ampersand symbol on the right side of the greater than redirection symbol, followed by the File Descriptor number:
+Converting Stdout to Stderr
+echo "I'm turning this Standard Output echo into a Standard Error" >&2
+
+
+
+Converting Stderr to Stdout
+ls -j 2>&1
+
+streams Lab:
+find / -type f -name "questions8_directory"  this is the 
+
+Heredocs: cat <<EOF
+line 1
+line2
+EOF  This takes an input streams
+EOF: end of file and EOL:End of line
+
+do one more time labs-streams:
+
+
+Pipes: named pipes: <>  see example below
+sort < abc.txt > abc_sorted.txt
+cat abc_sorted.txt
+pipe will not ignore the error bypassing see example below: 
+ls -z | echo "Biken"  this will print Biken though the stdin is an error output.
+
+
+Pipefail:
+set -o pipefail
+check some more in some youtube video
+
+Exit-code: 
+
+Lab 3 – Streams: 
+#!/bin/bash
+
+# This is the log file we're interested in
+logfile="/etc/logs/error.log"
+
+
+echo "Number of times each error message appears:"
+cat "${logfile}" | grep "DB_CONN_FAILURE" | sort | uniq -c
+
+try one more time.
+
+Xargs: helps to pass arguments to a command that isn't used to be piped
+example: echo "dir1 dir2 dir3" | xargs mkdir
+explore more 
+
+Eval:
+
+!5   this will give 5th command that we have typed in the terminal
+
+
+printf:  see more from youtube video and man command helps
+
+Expansions – Part One: 
+brace expansion: echo {A,B,C} 
+paramater expansion: echo $HOME,  echo ${filename%.*}
+other technique: echo $(ls), echo $((A + B))
+
+Variables expansion: see above one note.
+
+paramater Expasion: # will remove the prefix string and % to remove suffix character
+example: Greetings="Hello World"
+echo "{greetings#H}"
+Parameter – Part One: 
+
+#!/bin/bash
+path="/home/user/file.txt"
+
+echo "${path/file/data}"
+
+Parameter – Part Two: 
+Let's test the lab:
+var="/abc/jkl/ghi"
+echo "${var/def/jkl}"
+
+================================================================
+Some shell scripts loops examples:
+
+for loop:
+  name="Biken"
+
+  for b in $Biken
+  do
+    echo "${b}"
+  done  
+
+
+## Range base loop:
+for i in {1..30}
+do
+  echo "${i}"
+done
+====================================================================
+while loop:
+
+number=5
+
+while $number -lt 10
+do
+    echo "${number}
+     $number++
+done
+
+
+##
+
+i=1
+while [ $i -le 10 ]; do
+  echo $i
+  i=$((i+1))
+done
+
+
+## Until loop
+
+#!/bin/bash
+
+i=10
+until [ $i -eq 1 ]; do
+  echo "$i"
+  ((i--))
+done
+
+
+##Nesting loops
+All three types of loops can be nested, meaning that you can put one loop inside another loop. This can be useful for performing complex tasks. For example, the following nested for loop will print all the numbers from 1 to 100 that are divisible by 3:
+
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  for j in 3 6 9 12 15 18 21 24 27 30; do
+    if [ $i -eq $j ]; then
+      echo $i
+    fi
+  done
+done
+
+==============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
