@@ -50,7 +50,24 @@ conditional statement to be executed;;
 
 esac
 }
+===========================================
 
+case $filename in
+  *.txt)
+    echo "Text file"
+    ;;
+  *.jpg)
+    echo "Image file"
+    ;;
+  *.sh)
+    echo "Shell script"
+    ;;
+  *)
+    echo "Unknown file type"
+    ;;
+esac
+
+===============================================
 check it out while and for loop.
 
 we can call one script to other by using source example:
