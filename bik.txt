@@ -1,0 +1,6 @@
+Some to be noted points in shel scripts 
+
+## To run a shell script in debug mode 
+
+set -x at the top of the shell line
+to remove use set +x again
