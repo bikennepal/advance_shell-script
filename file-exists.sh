@@ -8,3 +8,4 @@ if [ $# -eq 0 ]; then
 else 
    cat "$fname"
 fi 
+
