@@ -11,7 +11,7 @@ echo "TimeStamp | CPU (%) | MEM (%)" > "$LOGFILE"
 while true; do
     TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
     #Get the CPU usage
-    CPU_USAGE=$(top -bn1 | grep "CPU(s)" | awk '{print $2 + $4}')
+    CPU_USAGE=$(top -b -n 1 | grep "CPU(s)" | awk '{print $2 + $4}')
     #Get the Mem usage
     MEM_USAGE=$(vm_stat | awk '/Mem/ {printf "%.2f", $3/$2 * 100}')
 
